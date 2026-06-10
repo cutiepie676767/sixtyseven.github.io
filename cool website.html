@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Bakery Name] — sick ahh bakery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — Edit colors, fonts, and sizes here
+    ============================================================ */
+    :root {
+      --clr-bg:          #F7F3FF;
+      --clr-bg-alt:      #EDE8F5;
+      --clr-surface:     #FFFFFF;
+      --clr-lilac:       #C8B8E8;
+      --clr-lavender:    #A98BD6;
+      --clr-plum:        #8B6FA6;
+      --clr-deep-plum:   #3A2152;
+      --clr-mauve:       #D4C2EC;
+      --clr-text:        #3A2152;
+      --clr-text-muted:  #7A6690;
+      --clr-accent:      #A98BD6;
+
+      --font-display:    'Playfair Display', Georgia, serif;
+      --font-body:       'Lato', sans-serif;
+      --font-script:     'Dancing Script', cursive;
+
+      --radius-sm:       8px;
+      --radius-md:       16px;
+      --radius-lg:       32px;
+      --shadow-soft:     0 4px 24px rgba(58, 33, 82, 0.08);
+      --shadow-card:     0 8px 32px rgba(58, 33, 82, 0.12);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       TEXTURE OVERLAY (flour-dust feel)
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(circle at 20% 15%, rgba(200,184,232,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(169,139,214,0.12) 0%, transparent 55%);
+    }
+
+    section, nav, footer { position: relative; z-index: 1; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(247, 243, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 184, 232, 0.35);
+      transition: box-shadow 0.3s;
+    }
+
+    nav.scrolled { box-shadow: var(--shadow-soft); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      letter-spacing: 0.01em;
+    }
+
+    .nav-logo span {
+      font-style: italic;
+      color: var(--clr-plum);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--clr-text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--clr-plum); }
+
+    .nav-cta {
+      background: var(--clr-lavender);
+      color: #fff !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: var(--radius-lg);
+      transition: background 0.2s, transform 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--clr-plum) !important;
+      transform: translateY(-1px);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--clr-deep-plum);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 5rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(200,184,232,0.35) 0%, transparent 70%),
+        var(--clr-bg);
+    }
+
+    .hero-inner { max-width: 720px; }
+
+    .hero-eyebrow {
+      font-family: var(--font-script);
+      font-size: 1.5rem;
+      color: var(--clr-plum);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--clr-deep-plum);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--clr-plum);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--clr-text-muted);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn-primary {
+      background: var(--clr-lavender);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-lg);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(169,139,214,0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--clr-plum);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(169,139,214,0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--clr-plum);
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-lg);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      border: 2px solid var(--clr-lilac);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--clr-plum);
+      background: rgba(200,184,232,0.15);
+      transform: translateY(-2px);
+    }
+
+    .hero-badges {
+      margin-top: 3.5rem;
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 1s forwards;
+    }
+
+    .hero-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+    }
+
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--clr-lilac);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       SECTION UTILITIES
+    ============================================================ */
+    .section-pad { padding: 6rem 2rem; }
+
+    .section-alt { background: var(--clr-bg-alt); }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--font-script);
+      font-size: 1.25rem;
+      color: var(--clr-plum);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--clr-plum);
+    }
+
+    .section-body {
+      color: var(--clr-text-muted);
+      max-width: 560px;
+      font-size: 1.05rem;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0 auto 3.5rem;
+      max-width: 200px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--clr-lilac);
+    }
+
+    .divider-icon {
+      font-size: 1.2rem;
+      color: var(--clr-lilac);
+    }
+
+    /* ============================================================
+       ABOUT
+    ============================================================ */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-image-wrap {
+      position: relative;
+    }
+
+    .about-image-placeholder {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: linear-gradient(135deg, var(--clr-mauve), var(--clr-lilac));
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--clr-plum);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .about-image-placeholder .ph-icon {
+      font-size: 2.5rem;
+      opacity: 0.5;
+    }
+
+    .about-float-tag {
+      position: absolute;
+      bottom: -1.25rem;
+      right: -1.25rem;
+      background: var(--clr-surface);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      border: 1px solid rgba(200,184,232,0.4);
+    }
+
+    .about-float-tag .big {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      display: block;
+    }
+
+    .about-float-tag .small {
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .about-text .section-body { margin-bottom: 2rem; }
+
+    .about-values {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .about-value {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+    }
+
+    .value-dot {
+      width: 10px; height: 10px;
+      background: var(--clr-lavender);
+      border-radius: 50%;
+      margin-top: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    .value-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      margin-bottom: 0.1rem;
+    }
+
+    .value-text span {
+      font-size: 0.9rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ============================================================
+       MENU
+    ============================================================ */
+    #menu { text-align: center; }
+
+    #menu .section-body { margin: 0 auto 1rem; }
+
+    .menu-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-tab {
+      padding: 0.5rem 1.4rem;
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--clr-lilac);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--clr-text-muted);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .menu-tab.active,
+    .menu-tab:hover {
+      background: var(--clr-lavender);
+      color: #fff;
+      border-color: var(--clr-lavender);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      text-align: left;
+    }
+
+    .menu-card {
+      background: var(--clr-surface);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      border: 1px solid rgba(200,184,232,0.3);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .menu-card-img {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, var(--clr-mauve) 0%, var(--clr-lilac) 100%);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: rgba(139, 111, 166, 0.5);
+    }
+
+    .menu-card-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--clr-deep-plum);
+    }
+
+    .menu-card-desc {
+      font-size: 0.875rem;
+      color: var(--clr-text-muted);
+      flex: 1;
+    }
+
+    .menu-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(200,184,232,0.3);
+    }
+
+    .menu-card-price {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--clr-plum);
+    }
+
+    .menu-card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      background: rgba(200,184,232,0.3);
+      color: var(--clr-plum);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .menu-note {
+      margin-top: 2.5rem;
+      font-size: 0.875rem;
+      color: var(--clr-text-muted);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       SPECIALS / FEATURED
+    ============================================================ */
+    #specials .specials-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .special-card {
+      background: var(--clr-surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(200,184,232,0.3);
+    }
+
+    .special-card-img {
+      width: 100%;
+      height: 280px;
+      background: linear-gradient(160deg, var(--clr-mauve), var(--clr-lilac), var(--clr-lavender));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .special-card-body { padding: 2rem; }
+
+    .special-card-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-lavender);
+      margin-bottom: 0.5rem;
+    }
+
+    .special-card-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .special-card-desc {
+      color: var(--clr-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .special-card-price {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-plum);
+    }
+
+    .specials-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .special-row {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--clr-surface);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      border: 1px solid rgba(200,184,232,0.25);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.2s;
+    }
+
+    .special-row:hover { transform: translateX(4px); }
+
+    .special-row-img {
+      width: 72px; height: 72px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--clr-mauve), var(--clr-lilac));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      color: rgba(139,111,166,0.5);
+    }
+
+    .special-row-content { flex: 1; }
+
+    .special-row-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--clr-deep-plum);
+      margin-bottom: 0.25rem;
+    }
+
+    .special-row-desc {
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+    }
+
+    .special-row-price {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--clr-plum);
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    /* ============================================================
+       GALLERY
+    ============================================================ */
+    #gallery { text-align: center; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--clr-mauve), var(--clr-lilac));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: rgba(139,111,166,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      aspect-ratio: 1;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-card);
+    }
+
+    .gallery-item.tall {
+      grid-row: span 2;
+      aspect-ratio: unset;
+    }
+
+    .gallery-item.wide {
+      grid-column: span 2;
+      aspect-ratio: 2/1;
+    }
+
+    /* ============================================================
+       HOURS & INFO
+    ============================================================ */
+    #info .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .info-card {
+      background: var(--clr-surface);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      border: 1px solid rgba(200,184,232,0.3);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .info-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--clr-deep-plum);
+      margin-bottom: 0.75rem;
+    }
+
+    .info-card-content {
+      font-size: 0.9rem;
+      color: var(--clr-text-muted);
+      line-height: 1.9;
+    }
+
+    .info-card-content strong {
+      color: var(--clr-text);
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       CONTACT / NEWSLETTER
+    ============================================================ */
+    #contact {
+      text-align: center;
+    }
+
+    #contact .section-body { margin: 0 auto 2.5rem; }
+
+    .contact-card {
+      background: linear-gradient(135deg, var(--clr-lavender), var(--clr-plum));
+      border-radius: var(--radius-lg);
+      padding: 4rem 3rem;
+      color: #fff;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 16px 48px rgba(139,111,166,0.3);
+    }
+
+    .contact-card .section-label { color: rgba(255,255,255,0.75); }
+
+    .contact-card .section-title { color: #fff; }
+
+    .contact-card .section-title em { color: rgba(255,255,255,0.8); }
+
+    .contact-card p {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .newsletter-row {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 480px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    .newsletter-input::placeholder { color: rgba(255,255,255,0.55); }
+
+    .newsletter-input:focus { background: rgba(255,255,255,0.28); }
+
+    .newsletter-btn {
+      background: #fff;
+      color: var(--clr-plum);
+      border: none;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .newsletter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover { color: #fff; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--clr-deep-plum);
+      color: rgba(255,255,255,0.6);
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-brand .footer-logo em {
+      font-style: italic;
+      color: var(--clr-lilac);
+    }
+
+    .footer-brand p {
+      font-size: 0.875rem;
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .footer-social {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .footer-social:hover {
+      background: var(--clr-lavender);
+      color: #fff;
+    }
+
+    .footer-col h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .footer-col ul li a {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.65);
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover { color: var(--clr-lilac); }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ============================================================
+       PLACEHOLDER HELPERS (visible reminder where real content goes)
+    ============================================================ */
+    .ph {
+      display: inline-block;
+      background: rgba(200,184,232,0.25);
+      color: var(--clr-plum);
+      border-radius: 4px;
+      padding: 0 4px;
+      font-style: italic;
+      font-size: 0.9em;
+      border: 1px dashed rgba(169,139,214,0.4);
+    }
+
+    /* ============================================================
+       ANIMATIONS
+    ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      #about .about-grid { grid-template-columns: 1fr; }
+      .about-image-wrap { max-width: 360px; margin: 0 auto; }
+      #specials .specials-inner { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      #info .info-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; flex-direction: column; gap: 1rem; }
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(247, 243, 255, 0.97);
+        padding: 1.5rem 2.5rem;
+        border-bottom: 1px solid rgba(200,184,232,0.35);
+        backdrop-filter: blur(12px);
+      }
+      .nav-toggle { display: flex; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.tall { grid-row: span 1; aspect-ratio: 1; }
+      .gallery-item.wide { grid-column: span 2; aspect-ratio: 2/1; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .newsletter-row { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo"><span>[Bakery Name]</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#specials">Specials</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#info">Visit Us</a></li>
+      <li><a href="#contact" class="nav-cta">Order Online</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">"can we go to that bakery again""which one""the cool one""oh you mean--"<span class="ph">[Bakery Name]</span></p>
+      <h1 class="hero-title">
+        we have kopi,<br><em>yeah we do</em>
+      </h1>
+      <p class="hero-subtitle">
+        <!-- Edit tagline below -->
+        yo this website frickin fire who made it
+      </p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">click here for 100% off (joke its the menu)</a>
+      </div>
+      <div class="hero-badges">
+        <span class="hero-badge"><span class="dot"></span> we bake</span>
+        <span class="hero-badge"><span class="dot"></span> <span class="ph">cool things</span></span>
+        <span class="hero-badge"><span class="dot"></span> <span class="ph">cool stuff</span></span>
+      </div>
+    </div>
+  </section>
+  <!-- ============================================================
+       MENU
+  ============================================================ -->
+  <section id="menu" class="section-pad">
+    <div class="container">
+      <span class="section-label" style="text-align:center;display:block;">shii we make stuff?</span>
+      <h2 class="section-title" style="text-align:center;">some <em>food</em></h2>
+      <p class="section-body" style="text-align:center;margin:0 auto 1.5rem;">
+        <!-- Edit the menu intro below -->
+        <span class="ph">this is where the cool description will be</span>
+      </p>
+
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-icon">✦</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <!-- Tab labels — edit category names as needed -->
+      <div class="menu-tabs">
+        <button class="menu-tab active">All</button>
+        <button class="menu-tab"><span class="ph">category 1</span></button>
+        <button class="menu-tab"><span class="ph">category 2</span></button>
+        <button class="menu-tab"><span class="ph">category 3</span></button>
+        <button class="menu-tab"><span class="ph">category 4</span></button>
+      </div>
+
+      <!-- Menu cards — duplicate, remove, or edit as needed -->
+      <div class="menu-grid">
+
+        <!-- Card 1 -->
+        <div class="menu-card">
+          <div class="menu-card-img">🍞</div>
+          <div class="menu-card-name"><span class="ph">item no.1</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">idk put something cute here</span></span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="menu-card">
+          <div class="menu-card-img">🥐</div>
+          <div class="menu-card-name"><span class="ph">item no.2</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">ik you will figure out something to put here</span></span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="menu-card">
+          <div class="menu-card-img">🎂</div>
+          <div class="menu-card-name"><span class="ph">item no.3</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">aww so cute</span></span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="menu-card">
+          <div class="menu-card-img">🍪</div>
+          <div class="menu-card-name"><span class="ph">item no.4</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">my name is saff bro</span></span>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="menu-card">
+          <div class="menu-card-img">☕</div>
+          <div class="menu-card-name"><span class="ph">item no.5</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">your name is kopi coffee</span></span>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="menu-card">
+          <div class="menu-card-img">🍰</div>
+          <div class="menu-card-name"><span class="ph">item no.6</span></div>
+          <div class="menu-card-desc"><span class="ph">something about it</span></div>
+          <div class="menu-card-footer">
+            <span class="menu-card-price"><span class="ph">how much</span></span>
+            <span class="menu-card-badge"><span class="ph">this is a haiku</span></span>
+          </div>
+        </div>
+
+      </div>
+      <p class="menu-note">menu can and will be changed fs <span class="ph">add some diet stuff or allergens here</span></p>
+    </div>
+  </section>
+  <!-- ============================================================
+       HOURS & INFO
+  ============================================================ -->
+  <section id="info" class="section-pad section-alt">
+    <div class="container">
+      <span class="section-label" style="text-align:center;display:block;">Find Us</span>
+      <h2 class="section-title" style="text-align:center;margin-bottom:3rem;">Come say <em>hello</em></h2>
+      <div class="info-grid">
+
+        <div class="info-card">
+          <div class="info-card-icon">📍</div>
+          <h3 class="info-card-title">Location</h3>
+          <div class="info-card-content">
+            <span class="ph">[Street Address]</span><br>
+            <span class="ph">[City, State / Region]</span><br>
+            <span class="ph">[Postal Code]</span><br><br>
+            <a href="#" style="color:var(--clr-lavender);font-weight:700;font-size:0.85rem;">Get Directions →</a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">🕐</div>
+          <h3 class="info-card-title">Opening Hours</h3>
+          <div class="info-card-content">
+            <strong><span class="ph">[Day range]</span></strong> <span class="ph">[HH:MM – HH:MM]</span><br>
+            <strong><span class="ph">[Day range]</span></strong> <span class="ph">[HH:MM – HH:MM]</span><br>
+            <strong><span class="ph">[Day range]</span></strong> <span class="ph">[HH:MM – HH:MM]</span><br>
+            <strong><span class="ph">[Day]</span></strong> Closed
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">📞</div>
+          <h3 class="info-card-title">Get in Touch</h3>
+          <div class="info-card-content">
+            <strong>Phone</strong><br>
+            <span class="ph">[Phone number]</span><br><br>
+            <strong>Email</strong><br>
+            <span class="ph">[hello@yourbakery.com]</span><br><br>
+            <strong>Instagram</strong><br>
+            <span class="ph">[@yourbakery]</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT / NEWSLETTER
+  ============================================================ -->
+  <section id="contact" class="section-pad">
+    <div class="container">
+      <div class="contact-card">
+        <span class="section-label">Stay in the Loop</span>
+        <h2 class="section-title" style="margin-bottom:1rem;">Get the <em>good stuff</em><br>first</h2>
+        <p>
+          <!-- Edit newsletter description below -->
+          <span class="ph">[Add a warm, brief pitch for the newsletter — e.g. "Weekly specials, seasonal drops, and behind-the-scenes moments delivered to your inbox. No spam, ever."]</span>
+        </p>
+        <div class="newsletter-row">
+          <input class="newsletter-input" type="email" placeholder="your@email.com" />
+          <button class="newsletter-btn">Subscribe</button>
+        </div>
+        <div class="contact-links">
+          <a href="#" class="contact-link">📸 Instagram</a>
+          <a href="#" class="contact-link">📘 Facebook</a>
+          <a href="#" class="contact-link">🐦 <span class="ph">[Other platform]</span></a>
+          <a href="mailto:" class="contact-link">✉️ Email Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo"><em>[Bakery Name]</em></div>
+        <p><span class="ph">[A one-line description of what the bakery is — e.g. "A cozy neighbourhood bakery baking happiness, one loaf at a time."]</span></p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social" aria-label="Instagram">📸</a>
+          <a href="#" class="footer-social" aria-label="Facebook">📘</a>
+          <a href="#" class="footer-social" aria-label="TikTok">🎵</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Menu</h4>
+        <ul>
+          <li><a href="#menu"><span class="ph">[Category 1]</span></a></li>
+          <li><a href="#menu"><span class="ph">[Category 2]</span></a></li>
+          <li><a href="#menu"><span class="ph">[Category 3]</span></a></li>
+          <li><a href="#specials">Seasonal Specials</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <ul>
+          <li><a href="#info">Location</a></li>
+          <li><a href="#info">Opening Hours</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#"><span class="ph">[Catering / Events]</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#"><span class="ph">[Press / Features]</span></a></li>
+          <li><a href="#"><span class="ph">[Careers]</span></a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> <span class="ph">[Bakery Name]</span>. All rights reserved.</span>
+      <span>Made with 💜 in <span class="ph">[City]</span></span>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+  <script>
+    // Auto-update copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Navbar scroll shadow
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks  = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close mobile nav when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // Simple menu tab highlighting (no filtering — tabs are visual placeholders)
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
